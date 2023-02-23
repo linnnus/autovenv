@@ -1,4 +1,4 @@
-_autovenv_chdir () {
+_autovenv_update () {
 	env_path="$(_autovenv_find_env_path)"
 
 	if [ -n "$env_path" ]; then
@@ -35,4 +35,5 @@ _autovenv_find_env_path () (
 	done
 )
 
-add-zsh-hook chpwd _autovenv_chdir
+# add-zsh-hook chpwd  _autovenv_update
+add-zsh-hook precmd _autovenv_update
