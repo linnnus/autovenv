@@ -6,7 +6,7 @@ Try doing something like this:
 
 ```zsh
 source autovenv.plugin.zsh
-cd example/eb
-cd ../../example2
+./create_examples.sh
+cd example-basic/
 cd ..
 ```

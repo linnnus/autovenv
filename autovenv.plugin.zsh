@@ -3,7 +3,7 @@ _autovenv_update () {
 
 	if [ -n "$env_path" ]; then
 		if [ -v VIRTUAL_ENV ]; then
-			if [ "$env_path" != "$(realpath "$VIRTUAL_ENV")" ]; then
+			if [ "${env_path:P}" != "${VIRTUAL_ENV:P}" ]; then
 				echo "autovenv: switching from $env_path -> $VIRTUAL_ENV"
 				deactivate
 				source "$env_path"/bin/activate
@@ -27,11 +27,11 @@ _autovenv_find_env_path () (
 	while [ "$dir" != "/" ]; do
 		for subdir in $(find "$dir" -maxdepth 1 -type d); do
 			if [ -f "$subdir"/pyvenv.cfg ]; then
-				echo "$(realpath "$subdir")"
+				echo "${subdir:P}"
 				return
 			fi
 		done
-		dir="$(dirname "$dir")"
+		dir="${dir:h}"
 	done
 )
 
