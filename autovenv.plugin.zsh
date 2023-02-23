@@ -7,16 +7,53 @@ _autovenv_update () {
 				echo "autovenv: switching from $env_path -> $VIRTUAL_ENV"
 				deactivate
 				source "$env_path"/bin/activate
+				_autovenv_post-activate_sanity_check "$env_path"
 			fi
 		else
 			echo "autovenv: activating $env_path"
 			source "$env_path"/bin/activate
+			_autovenv_post-activate_sanity_check "$env_path"
 		fi
 	else
 		if [ -v VIRTUAL_ENV ]; then
-			echo "autovenv: leaving virtual environment"
+			echo "autovenv: leaving virtual environment at $VIRTUAL_ENV"
 			deactivate
 		fi
+	fi
+}
+
+_autovenv_post-activate_sanity_check () {
+	local env_path="$1"
+
+	# check that VIRTUAL_ENV was set
+	if [ ! -v VIRTUAL_ENV ]; then
+		cat >&2 <<-EOF
+			autovenv: warning: $env_path/bin/activate did not set \$VIRTUAL_ENV.
+			The autovenv plugin uses this variable to detect if it's inside a
+			virtual environment and won't work without it.
+		EOF
+	fi
+
+	# check if activation script has outdated location
+	if [ "${env_path:P}" != "${VIRTUAL_ENV:P}" ]; then
+		cat >&2 <<-EOF
+			autovenv: warning: the activation script located at
+
+			    $env_path/bin/activate
+
+			set \$VIRTUAL_ENV to,
+
+			    ${VIRTUAL_ENV:P}
+
+			when the expected value was
+
+			    ${env_path:P}
+
+			If you moved the parent folder after creating the virtual environment,
+			you must delete it and create it anew as the activation script still
+			thinks it's in the old location. The autovenv plugin will behave
+			strangely becuase of this.
+		EOF
 	fi
 }
 
