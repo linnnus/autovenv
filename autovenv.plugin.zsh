@@ -4,7 +4,7 @@ _autovenv_update () {
 	if [ -n "$env_path" ]; then
 		if [ -v VIRTUAL_ENV ]; then
 			if [ "${env_path:P}" != "${VIRTUAL_ENV:P}" ]; then
-				echo "autovenv: switching from $env_path -> $VIRTUAL_ENV"
+				echo "autovenv: switching from $VIRTUAL_ENV -> $env_path"
 				deactivate
 				source "$env_path"/bin/activate
 				_autovenv_post-activate_sanity_check "$env_path"
