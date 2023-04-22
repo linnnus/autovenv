@@ -62,7 +62,7 @@ _autovenv_post-activate_sanity_check () {
 _autovenv_find_env_path () (
 	local dir="$PWD"
 	while [ "$dir" != "/" ]; do
-		for subdir in $(find "$dir" -maxdepth 1 -type d); do
+		find "$dir" -maxdepth 1 -type d -print0 | while IFS= read -r -d '' subdir; do
 			if [ -f "$subdir"/pyvenv.cfg ]; then
 				echo "${subdir:P}"
 				return

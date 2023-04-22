@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/zsh
 
 set -e
 
@@ -27,4 +27,10 @@ mkdir example-multiple-venvs
 cd example-multiple-venvs
 "$PYTHON" -m virtualenv .venv1
 "$PYTHON" -m virtualenv .venv2
+cd ..
+
+# Create one whose parent directory's name contains special characters
+mkdir $'example-special \ncharacters!'
+cd    $'example-special \ncharacters!'
+"$PYTHON" -m virtualenv .venv
 cd ..
