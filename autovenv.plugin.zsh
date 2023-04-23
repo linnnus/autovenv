@@ -1,3 +1,4 @@
+# Perform an update (leaving, entering, switching virtual environments).
 _autovenv_update () {
 	env_path="$(_autovenv_find_env_path)"
 
@@ -57,8 +58,11 @@ _autovenv_post-activate_sanity_check () {
 	fi
 }
 
-# Find closest parent folder that contains a virtual environment
-# FIXME: more robust path handling
+# Find closest parent folder that contains a virtual environment.
+#
+# A directory is said to contain a virtual environment if it contains a child
+# directory which contains a file named `pyvenv.cfg`. This function prints the
+# name of that child directory.
 _autovenv_find_env_path () (
 	local dir="$PWD"
 	while [ "$dir" != "/" ]; do
@@ -72,5 +76,6 @@ _autovenv_find_env_path () (
 	done
 )
 
-# add-zsh-hook chpwd  _autovenv_update
+# Update between prompts. This allows us to elegantly handle file system
+# changes (as opposed to the chpwd-hook).
 add-zsh-hook precmd _autovenv_update
