@@ -40,7 +40,7 @@ cd example-multiple-venvs
 cd ..
 
 # Create one whose parent directory's name contains special characters
-mkdir $'example-special \ncharacters!'
-cd    $'example-special \ncharacters!'
+mkdir $'example-special \t\n!characters '
+cd    $'example-special \t\n!characters '
 "$PYTHON" -m virtualenv .venv
 cd ..
