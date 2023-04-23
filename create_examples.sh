@@ -14,6 +14,16 @@ cd example-basic
 echo 'print("hello")' >hello.py
 cd ..
 
+# Create an example of nested directories with multiple virtual environments.
+mkdir -p example-nested/some/sub/dir
+cd example-nested/some
+"$PYTHON" -m virtualenv .venv-in-some
+cd sub/
+"$PYTHON" -m virtualenv .venv-in-sub
+cd dir/
+echo 'print("hello")' >hello.py
+cd ../../../..
+
 # Create a virtual environment which has been
 # moved but still has the old location hard-coded.
 mkdir old-location
