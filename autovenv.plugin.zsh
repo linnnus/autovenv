@@ -84,7 +84,7 @@ _autovenv_post-activate_sanity_check () {
 # A directory is said to contain a virtual environment if it contains a child
 # directory which contains a file named `pyvenv.cfg`. This function prints the
 # name of that child directory.
-_autovenv_find_env_path () (
+_autovenv_find_env_path () {
 	local dir="$PWD"
 	while [ "$dir" != "/" ]; do
 		find "$dir" -maxdepth 1 -type d -print0 | while IFS= read -r -d '' subdir; do
@@ -95,7 +95,7 @@ _autovenv_find_env_path () (
 		done
 		dir="${dir:h}"
 	done
-)
+}
 
 # Update between prompts. This allows us to elegantly handle file system
 # changes (as opposed to the chpwd-hook).
