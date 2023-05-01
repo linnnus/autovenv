@@ -1,6 +1,3 @@
-# FIXME: direnv messes this up
-# FIXME: sometimes VIRTUAL_ENV is set when we aren't in virtual env, like with 'nix shell' or subshells (?). maybe use deactivate function as signifier instead?
-
 # Perform an update (leaving, entering, switching virtual environments).
 _autovenv_update () {
 	env_path="$(_autovenv_find_env_path)"
