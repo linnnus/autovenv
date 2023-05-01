@@ -1,9 +1,12 @@
+# FIXME: direnv messes this up
+# FIXME: sometimes VIRTUAL_ENV is set when we aren't in virtual env, like with 'nix shell' or subshells (?). maybe use deactivate function as signifier instead?
+
 # Perform an update (leaving, entering, switching virtual environments).
 _autovenv_update () {
 	env_path="$(_autovenv_find_env_path)"
 
 	if [ -n "$env_path" ]; then
-		if [ -v VIRTUAL_ENV ]; then
+		if _autovenv_in_virtual_env; then
 			if [ "${env_path:P}" != "${VIRTUAL_ENV:P}" ]; then
 				echo "autovenv: switching from $VIRTUAL_ENV -> $env_path"
 				deactivate
@@ -16,11 +19,17 @@ _autovenv_update () {
 			_autovenv_post-activate_sanity_check "$env_path"
 		fi
 	else
-		if [ -v VIRTUAL_ENV ]; then
+		if _autovenv_in_virtual_env; then
 			echo "autovenv: leaving virtual environment at $VIRTUAL_ENV"
 			deactivate
 		fi
 	fi
+}
+
+# Check wether a virtual environment is currently active.
+_autovenv_in_virtual_env () {
+	typeset -f deactivate >/dev/null && [ -v VIRTUAL_ENV ]
+	return $?
 }
 
 _autovenv_post-activate_sanity_check () {
@@ -55,6 +64,15 @@ _autovenv_post-activate_sanity_check () {
 			thinks it's in the old location. The autovenv plugin will behave
 			strangely becuase of this.
 		EOF
+
+	# Check that deactivate function was defined.
+	if ! typeset -f deactivate >/dev/null; then
+		cat >&2 <<-EOF
+			autovenv: warning: $env_path/bin/activate did not define the shell
+			function \`disable\`. The autovenv plugin uses this variable to detect
+			if it's inside a virtual environment and won't work without it.
+		EOF
+		return
 	fi
 }
 

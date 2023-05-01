@@ -44,3 +44,13 @@ mkdir $'example-special \t\n!characters '
 cd    $'example-special \t\n!characters '
 "$PYTHON" -m virtualenv .venv
 cd ..
+
+# Create one managed by direnv, if available.
+# The plugin should NOT activate in here.
+if command -v direnv >/dev/null; then
+	mkdir example-direnv
+	cd example-direnv
+	echo 'layout python3' >.envrc
+	direnv allow
+	cd ..
+fi
