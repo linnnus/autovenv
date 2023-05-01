@@ -35,16 +35,17 @@ _autovenv_in_virtual_env () {
 _autovenv_post-activate_sanity_check () {
 	local env_path="$1"
 
-	# check that VIRTUAL_ENV was set
+	# Check that $VIRTUAL_ENV was set.
 	if [ ! -v VIRTUAL_ENV ]; then
 		cat >&2 <<-EOF
 			autovenv: warning: $env_path/bin/activate did not set \$VIRTUAL_ENV.
 			The autovenv plugin uses this variable to detect if it's inside a
 			virtual environment and won't work without it.
 		EOF
+		return
 	fi
 
-	# check if activation script has outdated location
+	# Check if activation script has outdated location.
 	if [ "${env_path:P}" != "${VIRTUAL_ENV:P}" ]; then
 		cat >&2 <<-EOF
 			autovenv: warning: the activation script located at
@@ -64,6 +65,8 @@ _autovenv_post-activate_sanity_check () {
 			thinks it's in the old location. The autovenv plugin will behave
 			strangely becuase of this.
 		EOF
+		return
+	fi
 
 	# Check that deactivate function was defined.
 	if ! typeset -f deactivate >/dev/null; then
